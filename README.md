@@ -1,61 +1,81 @@
 # Task Manager
 
-A small full stack Task Manager built for the technical assignment. The project uses Python's standard library for the backend and a simple vanilla JavaScript frontend, so it runs without installing extra packages.
+This repository contains a small full stack Task Manager built for the Full Stack Developer technical assignment. The app keeps the stack intentionally small and easy to review:
 
-## Features
+- Backend: Python standard library HTTP server
+- Frontend: HTML, CSS, and vanilla JavaScript
+- Storage: local JSON file persistence
 
-- View all tasks
+No third-party packages are required.
+
+## Assignment Coverage
+
+Core requirements completed:
+
+- Display a list of tasks
 - Add a new task
-- Mark a task as completed or active
+- Mark a task as completed
 - Delete a task
-- Show loading, success, and error states
-- Persist tasks after refresh using a local JSON file
+- Show loading and error states
+- Expose a REST API
+- Validate incoming data
+- Return clear JSON responses
+- Keep backend and frontend code organized
+
+Optional bonus completed:
+
+- Persist tasks after refresh
 - Filter tasks by all, active, or completed
+- Add basic tests
 
-## Project Structure
+## How to Run
 
-```text
-task-manager/
-|-- app.py
-|-- data/
-|-- static/
-|   |-- app.js
-|   |-- index.html
-|   `-- styles.css
-|-- task_manager/
-|   |-- task_store.py
-|   `-- validation.py
-`-- tests/
-    `-- test_task_store.py
-```
-
-## Run Locally
-
-1. Open a terminal in `task-manager`.
+1. Open a terminal in the project folder.
 2. Start the server:
 
 ```bash
 python app.py
 ```
 
-3. Open `http://127.0.0.1:8000` in your browser.
+3. Open the app in your browser:
 
-## Run Tests
+```text
+http://127.0.0.1:8000
+```
+
+## How to Test
 
 ```bash
 python -m unittest discover -s tests
 ```
 
-## API Endpoints
+## API
 
-- `GET /tasks` returns all tasks
-- `POST /tasks` creates a task with a `title`
-- `PATCH /tasks/:id` updates the `completed` status
-- `DELETE /tasks/:id` deletes a task
+### `GET /tasks`
 
-## Example Payloads
+Returns all tasks.
 
-Create a task:
+Example response:
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "4ae8c2fc-6d51-44b2-aef4-c19f8b58b0f7",
+      "title": "Prepare demo",
+      "completed": false,
+      "createdAt": "2026-04-09T19:25:00.000000+00:00"
+    }
+  ]
+}
+```
+
+### `POST /tasks`
+
+Creates a new task.
+
+Request body:
 
 ```json
 {
@@ -63,7 +83,11 @@ Create a task:
 }
 ```
 
-Update a task:
+### `PATCH /tasks/:id`
+
+Updates a task's completion status.
+
+Request body:
 
 ```json
 {
@@ -71,8 +95,39 @@ Update a task:
 }
 ```
 
-## Assumptions and Trade-offs
+### `DELETE /tasks/:id`
 
-- I used file-based storage instead of a database to keep the app intentionally small.
-- The backend only supports updating task completion status because that is the required PATCH behavior in the assignment.
-- The frontend is plain JavaScript to avoid setup overhead and keep the app easy to review.
+Deletes a task by id.
+
+## Validation Rules
+
+- `title` is required for task creation
+- `title` must be a non-empty string
+- `title` must be 120 characters or fewer
+- `completed` is required for updates
+- `completed` must be a boolean
+
+## Project Structure
+
+```text
+task-manager/
+|-- app.py
+|-- data/
+|   `-- tasks.json
+|-- static/
+|   |-- app.js
+|   |-- index.html
+|   `-- styles.css
+|-- task_manager/
+|   |-- task_store.py
+|   |-- validation.py
+|   `-- __init__.py
+`-- tests/
+    `-- test_task_store.py
+```
+
+## Notes and Trade-offs
+
+- I used file-based persistence instead of a database to keep the solution intentionally small for the assignment scope.
+- I kept the frontend in vanilla JavaScript to avoid build tooling and make the code easy to inspect quickly.
+- The `PATCH` endpoint only updates completion status because that is the required behavior from the assignment brief.
